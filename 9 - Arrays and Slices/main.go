@@ -30,4 +30,38 @@ func main() {
 
 	arr2[1] = "altered index"
 	fmt.Println(slice2)
+
+	fmt.Println("-----")
+
+	// Internal arrays
+
+	slice3 := make([]float32, 10, 11)
+	fmt.Println(slice3)
+	fmt.Println(len(slice3)) // length
+	fmt.Println(cap(slice3)) // capacity
+	fmt.Println()
+
+	slice3 = append(slice3, 5)
+	fmt.Println(slice3)
+	fmt.Println(len(slice3))
+	fmt.Println(cap(slice3))
+	fmt.Println()
+
+	slice3 = append(slice3, 6)
+	fmt.Println(slice3)
+	fmt.Println(len(slice3))
+	fmt.Println(cap(slice3))
+	fmt.Println()
+
+	slice4 := make([]float32, 5)
+	fmt.Println(slice4)
+	fmt.Println(len(slice4))
+	fmt.Println(cap(slice4))
+	fmt.Println()
+
+	slice4 = append(slice4, 6)
+	fmt.Println(slice4)
+	fmt.Println(len(slice4))
+	fmt.Println(cap(slice4))
+	fmt.Println()
 }
