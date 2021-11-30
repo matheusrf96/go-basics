@@ -35,6 +35,27 @@ func fib(pos uint) uint {
 	return fib(pos-2) + fib(pos-1)
 }
 
+// Defer
+func func1() {
+	fmt.Println("Exec func1")
+}
+
+func func2() {
+	fmt.Println("Exec func2")
+}
+
+func studentIsApproved(n1 float32, n2 float32) (grade bool) {
+	defer fmt.Println("Média calculada!")
+
+	average := (n1 + n2) / 2
+
+	if average >= 6 {
+		return true
+	}
+
+	return false
+}
+
 func main() {
 	sum, sub := calcs(5, 2)
 	fmt.Println(sum, sub)
@@ -64,4 +85,13 @@ func main() {
 	for i := uint(1); i <= pos; i++ {
 		fmt.Println(fib(i))
 	}
+
+	// -----
+
+	fmt.Println("===== Defer =====")
+
+	defer func1()
+	func2()
+
+	fmt.Println(studentIsApproved(9, 7))
 }
