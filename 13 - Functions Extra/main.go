@@ -26,6 +26,15 @@ func writeNums(text string, nums ...int) {
 	}
 }
 
+// Recursive functions
+func fib(pos uint) uint {
+	if pos <= 1 {
+		return pos
+	}
+
+	return fib(pos-2) + fib(pos-1)
+}
+
 func main() {
 	sum, sub := calcs(5, 2)
 	fmt.Println(sum, sub)
@@ -44,4 +53,15 @@ func main() {
 	}("Text example")
 
 	fmt.Println(anon)
+
+	// -----
+
+	fmt.Println("===== Fib =====")
+
+	pos := uint(7)
+	fmt.Println(fib(pos))
+
+	for i := uint(1); i <= pos; i++ {
+		fmt.Println(fib(i))
+	}
 }
