@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// Ex.: `go run main.go ip --host www.twitter.com`
+// Ex.: `go run main.go ip --host twitter.com`
 func main() {
 	fmt.Println("Starting point...")
 
