@@ -2,6 +2,14 @@ package main
 
 import "fmt"
 
+var z int
+
+// Init function runs before main function
+func init() {
+	fmt.Println("Init function running...")
+	z = 5
+}
+
 // Named return
 func calcs(x int8, y int8) (sum int8, sub int8) {
 	sum = x + y
@@ -57,6 +65,9 @@ func studentIsApproved(n1 float32, n2 float32) (grade bool) {
 }
 
 func main() {
+	fmt.Println(z)
+	// -----
+
 	sum, sub := calcs(5, 2)
 	fmt.Println(sum, sub)
 
