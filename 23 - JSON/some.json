@@ -1,0 +1,15 @@
+{
+    "name": "Matheus",
+    "age": 25,
+    "club": "Corinthians",
+    "favourite_games": [
+        {
+            "name": "Football Manager",
+            "category": "Sports"
+        },
+        {
+            "name": "Final Fantasy",
+            "category": "RPG"
+        }
+    ]
+}
