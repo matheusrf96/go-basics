@@ -17,6 +17,7 @@ type user struct {
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+		fmt.Println(err)
 		w.Write([]byte("Could not read request body"))
 		return
 	}
@@ -24,12 +25,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var u user
 	err = json.Unmarshal(body, &u)
 	if err != nil {
+		fmt.Println(err)
 		w.Write([]byte("Could not convert user into struct"))
 		return
 	}
 
 	db, err := db.Connect()
 	if err != nil {
+		fmt.Println(err)
 		w.Write([]byte("Could not connect to database"))
 		return
 	}
@@ -45,10 +48,52 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	lastInsertId := 0
 	err = statement.QueryRow(u.Name, u.Email).Scan(&lastInsertId)
 	if err != nil {
+		fmt.Println(err)
 		w.Write([]byte("Could not insert data"))
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(fmt.Sprintf("Data inserted succesfully. #%d", lastInsertId)))
+}
+
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	db, err := db.Connect()
+	if err != nil {
+		w.Write([]byte("Could not connect to database"))
+		return
+	}
+
+	rows, err := db.Query("SELECT * FROM users")
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not find users"))
+		return
+	}
+
+	var users []user
+	for rows.Next() {
+		var user user
+
+		err := rows.Scan(&user.ID, &user.Name, &user.Email)
+		if err != nil {
+			fmt.Println(err)
+			w.Write([]byte("Could not treat row found"))
+			return
+		}
+
+		users = append(users, user)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	err = json.NewEncoder(w).Encode(users)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not encode users"))
+		return
+	}
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+
 }
