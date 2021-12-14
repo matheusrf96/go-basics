@@ -39,6 +39,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Could not connect to database"))
 		return
 	}
+	defer db.Close()
 
 	statement, err := db.Prepare(`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id`)
 	if err != nil {
@@ -66,6 +67,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Could not connect to database"))
 		return
 	}
+	defer db.Close()
 
 	rows, err := db.Query("SELECT * FROM users")
 	if err != nil {
@@ -113,6 +115,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Could not connect to database"))
 		return
 	}
+	defer db.Close()
 
 	row, err := db.Query("SELECT * FROM users WHERE id = $1", ID)
 	if err != nil {
@@ -138,4 +141,55 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Could not encode user"))
 		return
 	}
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	ID, err := strconv.ParseUint(params["id"], 10, 32)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not parse id"))
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not read request body"))
+		return
+	}
+
+	var user user
+
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not unmarshal user"))
+		return
+	}
+
+	db, err := db.Connect()
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not connect to database"))
+		return
+	}
+
+	statement, err := db.Prepare("UPDATE users SET name = $1, email = $2 WHERE id = $3")
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not create statement"))
+		return
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(user.Name, user.Email, ID)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Could not update user"))
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
